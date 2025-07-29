@@ -5,6 +5,17 @@
   --foreground: #171717;
 }
 
+@theme{
+  --color-navbar: #ffffff;
+  --color-primary: #2F4F4F;
+  --color-primary-hover: #C9A15C;
+  
+  /* dark mode */
+  --color-navbar-dark: #171717;
+  --color-primary-dark: #A9C9C9;
+  --color-primary-hover-dark: #FFD27F;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

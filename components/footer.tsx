@@ -119,7 +119,7 @@ export function Footer(){
           </div>
 
           <div className="border-t border-[#F4F1E1]/20 mt-8 pt-8 text-center text-[#F4F1E1]/60">
-            <p>&copy; 2024 Tripora. All rights reserved. Made with ❤️ for Indonesian travelers.</p>
+            <p>&copy; 2024 Tripora. All rights reserved.</p>
           </div>
         </div>
       </footer>

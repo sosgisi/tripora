@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["next-auth", "./types/next-auth"],
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -22,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js", "components/buttons/edit-button.tss", "types/**/*.d.ts"],
   "exclude": ["node_modules"]
 }

@@ -86,11 +86,13 @@ export default function PayButton({booking, trip}: {booking:BookingWithUser|null
     }
 
     return (
-        <button onClick={handlePay} disabled={loading} className="w-full bg-primary-hover/90 dark:bg-primary-hover-dark/90 text-white dark:text-primary font-bold py-3 rounded-lg hover:bg-primary-hover dark:hover:bg-primary-hover-dark transform duration-200 cursor-pointer mt-5">
-            { loading ?
-                'Loading...'
-                : 'Pay now'
-            }            
+        <button 
+            onClick={handlePay} 
+            disabled={loading} 
+            className="w-full bg-primary-hover/90 dark:bg-primary-hover-dark/90 text-white dark:text-primary font-bold py-3 rounded-lg hover:bg-primary-hover dark:hover:bg-primary-hover-dark transform duration-200 cursor-pointer mt-5"
+            >
+            { loading ? 'جاري التحميل...' : 'ادفع الآن' }
         </button>
+
     )
 }

@@ -11,9 +11,11 @@ export default function BackButton() {
     <button
       onClick={() => router.back()}
       className="flex items-center w-fit gap-2 text-primary hover:text-primary-hover dark:text-primary-dark hover:dark:text-primary-dark-hover mb-8 cursor-pointer"
+      dir="rtl"
     >
-      <ArrowLeft />
-      Back
+      <ArrowLeft className="rotate-180" />
+      رجوع
     </button>
+
   );
 }

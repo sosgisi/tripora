@@ -5,187 +5,377 @@ import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
-export default function RegisterForm(){
+export default function RegisterForm() {
+  const router = useRouter()
 
-    const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phonenumber: "",
+    password: "",
+    confirmPassword: "",
+  })
+  const [fieldError, setFieldError] = useState<Record<string, string>>({})
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phonenumber: "",
-        password: "",
-        confirmPassword: "",
-    })
-    const [fieldError, setFieldError] = useState<Record<string, string>>({});
-    const [error, setError] = useState<string|null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    const newErrors = {}
+    setFieldError(newErrors)
 
-    const handleRegister = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
-        const newErrors = {};
-        setFieldError(newErrors);
-
-        if(formData.password !== formData.confirmPassword){
-            const passwordError = {
-                password: 'Password do not match',
-                confirmPassword: 'Password do not match',
-            }
-            setFieldError(passwordError);
-            setIsLoading(false);
-            return;
-        }
-
-        try{
-            const res = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
-            const data = await res.json();
-            if(!res.ok){
-                return setError(data.message || 'Registration failed');
-            }
-
-            alert('Registration Successfull');
-            router.push('/');
-        }catch(error){
-            console.error('Register error: ', error);
-            setError('Something went wrong. Please try again');
-        }finally{
-            setIsLoading(false);
-        }
+    if (formData.password !== formData.confirmPassword) {
+      const passwordError = {
+        password: "كلمة المرور غير متطابقة",
+        confirmPassword: "كلمة المرور غير متطابقة",
+      }
+      setFieldError(passwordError)
+      setIsLoading(false)
+      return
     }
 
-    const handleInputChange = (field: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }))
-        setFieldError((prev) => ({ ...prev, [field]: ''}))
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        return setError(data.message || "فشل التسجيل")
+      }
+
+      alert("تم التسجيل بنجاح")
+      router.push("/")
+    } catch (error) {
+      console.error("Register error: ", error)
+      setError("حدث خطأ ما، يرجى المحاولة لاحقًا")
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    return(
-        <form onSubmit={handleRegister} className="space-y-4">
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFieldError((prev) => ({ ...prev, [field]: "" }))
+  }
 
-            <div className="relative space-y-2">
-                <label className="text-sm font-medium text-[#2F4F4F]">Nama Lengkap</label>
-                <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
-                    <input
-                        type="text"
-                        placeholder="Masukkan nama lengkap"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange("name", e.target.value)}
-                        className="pl-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
-                        required
-                    />
-                </div>
-                { fieldError?.name && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.name}</p> }
-            </div>
+  return (
+    <form dir="rtl" onSubmit={handleRegister} className="space-y-4">
+      <div className="relative space-y-2">
+        <label className="text-sm font-medium text-[#2F4F4F]">الاسم الكامل</label>
+        <div className="relative">
+          <User className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="أدخل اسمك الكامل"
+            value={formData.name}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            className="pr-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
+            required
+          />
+        </div>
+        {fieldError?.name && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.name}</p>}
+      </div>
 
-            <div className="relative space-y-2">
-                <label className="text-sm font-medium text-[#2F4F4F]">Email</label>
-                <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
-                    <input
-                        type="email"
-                        placeholder="nama@email.com"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="pl-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
-                        required
-                    />
-                </div>
-                { fieldError?.email && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.email}</p> }
-            </div>
+      <div className="relative space-y-2">
+        <label className="text-sm font-medium text-[#2F4F4F]">البريد الإلكتروني</label>
+        <div className="relative">
+          <Mail className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+          <input
+            type="email"
+            placeholder="example@email.com"
+            value={formData.email}
+            onChange={(e) => handleInputChange("email", e.target.value)}
+            className="pr-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
+            required
+          />
+        </div>
+        {fieldError?.email && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.email}</p>}
+      </div>
 
-            <div className="relative space-y-2">
-                <label className="text-sm font-medium text-[#2F4F4F]">Nomor Telepon</label>
-                <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
-                    <input
-                        type="tel"
-                        placeholder="08xxxxxxxxxx"
-                        value={formData.phonenumber}
-                        onChange={(e) => handleInputChange("phonenumber", e.target.value)}
-                        className={`${fieldError?.phonenumber && 'border-red-500'} pl-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded`}
-                        required
-                    />
-                </div>
-                { fieldError?.phonenumber && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.phonenumber}</p> }
-            </div>
+      <div className="relative space-y-2">
+        <label className="text-sm font-medium text-[#2F4F4F]">رقم الهاتف</label>
+        <div className="relative">
+          <Phone className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+          <input
+            type="tel"
+            placeholder="05xxxxxxxx"
+            value={formData.phonenumber}
+            onChange={(e) => handleInputChange("phonenumber", e.target.value)}
+            className={`${fieldError?.phonenumber && "border-red-500"} pr-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded`}
+            required
+          />
+        </div>
+        {fieldError?.phonenumber && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.phonenumber}</p>}
+      </div>
 
-            <div className="relative space-y-2">
-                <label className="text-sm font-medium text-[#2F4F4F]">Password</label>
-                <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Minimal 8 karakter"
-                        value={formData.password}
-                        onChange={(e) => handleInputChange("password", e.target.value)}
-                        className="pl-10 pr-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
-                        required
-                    />
-                    <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 hover:text-[#2F4F4F]"
-                    >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                </div>
-                { fieldError?.password && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.password}</p> }
-            </div>
+      <div className="relative space-y-2">
+        <label className="text-sm font-medium text-[#2F4F4F]">كلمة المرور</label>
+        <div className="relative">
+          <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="يجب أن تكون 8 أحرف على الأقل"
+            value={formData.password}
+            onChange={(e) => handleInputChange("password", e.target.value)}
+            className="pr-10 pl-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 hover:text-[#2F4F4F]"
+          >
+            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          </button>
+        </div>
+        {fieldError?.password && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.password}</p>}
+      </div>
 
-            <div className="relative space-y-2">
-                <label className="text-sm font-medium text-[#2F4F4F]">Konfirmasi Password</label>
-                <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
-                    <input
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Ulangi password"
-                        value={formData.confirmPassword}
-                        onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                        className="pl-10 pr-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
-                        required
-                    />
-                    <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 hover:text-[#2F4F4F]"
-                    >
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                </div>
-                { fieldError?.confirmPassword && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.confirmPassword}</p> }
-            </div>
+      <div className="relative space-y-2">
+        <label className="text-sm font-medium text-[#2F4F4F]">تأكيد كلمة المرور</label>
+        <div className="relative">
+          <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="أعد إدخال كلمة المرور"
+            value={formData.confirmPassword}
+            onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+            className="pr-10 pl-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 hover:text-[#2F4F4F]"
+          >
+            {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          </button>
+        </div>
+        {fieldError?.confirmPassword && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.confirmPassword}</p>}
+      </div>
 
-            <div className="flex items-center">
-                <input type="checkbox" id="agree" className="mr-2" required />
-                <label htmlFor="agree" className="text-sm text-[#2F4F4F]/70">
-                    Saya menyetujui{" "}
-                    <Link href="/terms" className="text-[#C9A15C] hover:underline">
-                        Syarat & Ketentuan
-                    </Link>{" "}
-                    dan{" "}
-                    <Link href="/privacy" className="text-[#C9A15C] hover:underline">
-                        Kebijakan Privasi
-                    </Link>
-                </label>
-            </div>
+      <div className="flex items-center">
+        <input type="checkbox" id="agree" className="ml-2" required />
+        <label htmlFor="agree" className="text-sm text-[#2F4F4F]/70">
+          أوافق على{" "}
+          <Link href="/terms" className="text-[#C9A15C] hover:underline">
+            الشروط والأحكام
+          </Link>{" "}
+          و{" "}
+          <Link href="/privacy" className="text-[#C9A15C] hover:underline">
+            سياسة الخصوصية
+          </Link>
+        </label>
+      </div>
 
-            <div>
-                { error && <p className="text-xs text-red-500">{error}</p> }
-                <button
-                    type="submit"
-                    className={`${isLoading && 'opacity-50'} w-full bg-[#C9A15C] hover:bg-[#C9A15C]/90 text-white h-12 text-lg font-semibold rounded-md cursor-pointer`}
-                    disabled={isLoading}
-                >
-                {isLoading ? "Mendaftar..." : "Daftar Sekarang"}
-                </button>
-            </div>
-
-        </form>
-    )
+      <div>
+        {error && <p className="text-xs text-red-500">{error}</p>}
+        <button
+          type="submit"
+          className={`${isLoading && "opacity-50"} w-full bg-[#C9A15C] hover:bg-[#C9A15C]/90 text-white h-12 text-lg font-semibold rounded-md cursor-pointer`}
+          disabled={isLoading}
+        >
+          {isLoading ? "جارٍ التسجيل..." : "إنشاء حساب"}
+        </button>
+      </div>
+    </form>
+  )
 }
+
+
+// "use client"
+
+// import { useState } from "react"
+// import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react"
+// import Link from "next/link"
+// import { useRouter } from "next/navigation"
+
+// export default function RegisterForm(){
+
+//     const router = useRouter();
+
+//     const [showPassword, setShowPassword] = useState(false)
+//     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+//     const [formData, setFormData] = useState({
+//         name: "",
+//         email: "",
+//         phonenumber: "",
+//         password: "",
+//         confirmPassword: "",
+//     })
+//     const [fieldError, setFieldError] = useState<Record<string, string>>({});
+//     const [error, setError] = useState<string|null>(null);
+//     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+//     const handleRegister = async (e: React.FormEvent) => {
+//         e.preventDefault()
+//         setIsLoading(true)
+//         const newErrors = {};
+//         setFieldError(newErrors);
+
+//         if(formData.password !== formData.confirmPassword){
+//             const passwordError = {
+//                 password: 'Password do not match',
+//                 confirmPassword: 'Password do not match',
+//             }
+//             setFieldError(passwordError);
+//             setIsLoading(false);
+//             return;
+//         }
+
+//         try{
+//             const res = await fetch('/api/auth/register', {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify(formData),
+//             });
+//             const data = await res.json();
+//             if(!res.ok){
+//                 return setError(data.message || 'Registration failed');
+//             }
+
+//             alert('Registration Successfull');
+//             router.push('/');
+//         }catch(error){
+//             console.error('Register error: ', error);
+//             setError('Something went wrong. Please try again');
+//         }finally{
+//             setIsLoading(false);
+//         }
+//     }
+
+//     const handleInputChange = (field: string, value: string) => {
+//         setFormData((prev) => ({ ...prev, [field]: value }))
+//         setFieldError((prev) => ({ ...prev, [field]: ''}))
+//     }
+
+//     return(
+//         <form onSubmit={handleRegister} className="space-y-4">
+
+//             <div className="relative space-y-2">
+//                 <label className="text-sm font-medium text-[#2F4F4F]">Nama Lengkap</label>
+//                 <div className="relative">
+//                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+//                     <input
+//                         type="text"
+//                         placeholder="Masukkan nama lengkap"
+//                         value={formData.name}
+//                         onChange={(e) => handleInputChange("name", e.target.value)}
+//                         className="pl-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
+//                         required
+//                     />
+//                 </div>
+//                 { fieldError?.name && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.name}</p> }
+//             </div>
+
+//             <div className="relative space-y-2">
+//                 <label className="text-sm font-medium text-[#2F4F4F]">Email</label>
+//                 <div className="relative">
+//                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+//                     <input
+//                         type="email"
+//                         placeholder="nama@email.com"
+//                         value={formData.email}
+//                         onChange={(e) => handleInputChange("email", e.target.value)}
+//                         className="pl-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
+//                         required
+//                     />
+//                 </div>
+//                 { fieldError?.email && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.email}</p> }
+//             </div>
+
+//             <div className="relative space-y-2">
+//                 <label className="text-sm font-medium text-[#2F4F4F]">Nomor Telepon</label>
+//                 <div className="relative">
+//                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+//                     <input
+//                         type="tel"
+//                         placeholder="08xxxxxxxxxx"
+//                         value={formData.phonenumber}
+//                         onChange={(e) => handleInputChange("phonenumber", e.target.value)}
+//                         className={`${fieldError?.phonenumber && 'border-red-500'} pl-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded`}
+//                         required
+//                     />
+//                 </div>
+//                 { fieldError?.phonenumber && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.phonenumber}</p> }
+//             </div>
+
+//             <div className="relative space-y-2">
+//                 <label className="text-sm font-medium text-[#2F4F4F]">Password</label>
+//                 <div className="relative">
+//                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+//                     <input
+//                         type={showPassword ? "text" : "password"}
+//                         placeholder="Minimal 8 karakter"
+//                         value={formData.password}
+//                         onChange={(e) => handleInputChange("password", e.target.value)}
+//                         className="pl-10 pr-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
+//                         required
+//                     />
+//                     <button
+//                         type="button"
+//                         onClick={() => setShowPassword(!showPassword)}
+//                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 hover:text-[#2F4F4F]"
+//                     >
+//                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+//                     </button>
+//                 </div>
+//                 { fieldError?.password && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.password}</p> }
+//             </div>
+
+//             <div className="relative space-y-2">
+//                 <label className="text-sm font-medium text-[#2F4F4F]">Konfirmasi Password</label>
+//                 <div className="relative">
+//                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 w-5 h-5" />
+//                     <input
+//                         type={showConfirmPassword ? "text" : "password"}
+//                         placeholder="Ulangi password"
+//                         value={formData.confirmPassword}
+//                         onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+//                         className="pl-10 pr-10 h-12 border-[#2F4F4F]/20 focus:border-[#C9A15C] w-full border rounded"
+//                         required
+//                     />
+//                     <button
+//                         type="button"
+//                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+//                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2F4F4F]/60 hover:text-[#2F4F4F]"
+//                     >
+//                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+//                     </button>
+//                 </div>
+//                 { fieldError?.confirmPassword && <p className="absolute -bottom-4 text-xs text-red-500">{fieldError?.confirmPassword}</p> }
+//             </div>
+
+//             <div className="flex items-center">
+//                 <input type="checkbox" id="agree" className="mr-2" required />
+//                 <label htmlFor="agree" className="text-sm text-[#2F4F4F]/70">
+//                     Saya menyetujui{" "}
+//                     <Link href="/terms" className="text-[#C9A15C] hover:underline">
+//                         Syarat & Ketentuan
+//                     </Link>{" "}
+//                     dan{" "}
+//                     <Link href="/privacy" className="text-[#C9A15C] hover:underline">
+//                         Kebijakan Privasi
+//                     </Link>
+//                 </label>
+//             </div>
+
+//             <div>
+//                 { error && <p className="text-xs text-red-500">{error}</p> }
+//                 <button
+//                     type="submit"
+//                     className={`${isLoading && 'opacity-50'} w-full bg-[#C9A15C] hover:bg-[#C9A15C]/90 text-white h-12 text-lg font-semibold rounded-md cursor-pointer`}
+//                     disabled={isLoading}
+//                 >
+//                 {isLoading ? "Mendaftar..." : "Daftar Sekarang"}
+//                 </button>
+//             </div>
+
+//         </form>
+//     )
+// }

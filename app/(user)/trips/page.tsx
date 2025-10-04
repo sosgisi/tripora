@@ -8,7 +8,15 @@ import TripCard from "./trip-card";
 import { fetchAllCategory } from "@/app/lib/data/category";
 import CategoryFilter from "@/app/ui/category-filter";
 
-interface PageProps {
+// interface PageProps {
+//   searchParams?: {
+//     query?: string;
+//     page?: string;
+//     category?: string;
+//   };
+// }
+interface PageProps<T extends Record<string, string> = Record<string, string>> {
+  params: T;
   searchParams?: {
     query?: string;
     page?: string;

@@ -15,8 +15,11 @@ import CategoryFilter from "@/app/ui/category-filter";
 //     category?: string;
 //   };
 // }
-interface PageProps<T extends Record<string, string> = Record<string, string>> {
-  params: T;
+export interface PageProps{
+  params: {
+    id: string;
+    bookingId: string;
+  };
   searchParams?: {
     query?: string;
     page?: string;

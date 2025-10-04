@@ -1,3 +1,4 @@
+import { PageProps } from "@/app/(user)/trips/page";
 import { getBookingById } from "@/app/lib/data/booking";
 import { getTripById } from "@/app/lib/data/trip";
 import BackButton from "@/components/detail trip/back-button";
@@ -6,11 +7,7 @@ import PaymentFormProvider from "@/components/payment/payment-form-provider";
 import { formatter } from "@/components/rupiah-format";
 import { Check } from "lucide-react";
 
-export default async function PaymentPage({
-  params,
-}: {
-  params: { id: string; bookingId: string };
-}) {
+export default async function PaymentPage({ params }: PageProps) {
   const { id, bookingId } = params;
 
   const trip = await getTripById(Number(id));

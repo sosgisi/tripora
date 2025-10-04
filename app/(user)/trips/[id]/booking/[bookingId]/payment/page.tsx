@@ -8,7 +8,7 @@ import { Check } from "lucide-react";
 
 export default async function PaymentPage({ params }: { params: { id: number; bookingId: string } }) {
 
-    const { id, bookingId } = await params;
+    const { id, bookingId } = params;
     const trip = await getTripById(id);
     const booking = await getBookingById(bookingId);
 

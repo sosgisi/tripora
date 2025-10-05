@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = "force-dynamic";
+
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar"
 import { ChevronLeft, ChevronRight, Shield, Star, Users } from "lucide-react";

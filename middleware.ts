@@ -84,6 +84,7 @@ export const config = {
         '/register',
         '/',
         '/profile/:path*',
-        '/provider/:path*'
+        '/provider/:path*',
+        '/((?!api|_next/static|_next/image|favicon.ico).*)'
     ],
 }

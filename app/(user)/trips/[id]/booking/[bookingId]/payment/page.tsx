@@ -6,14 +6,14 @@ import PaymentFormProvider from "@/components/payment/payment-form-provider";
 import { formatter } from "@/components/rupiah-format";
 import { Check } from "lucide-react";
 
-export default async function PaymentPage({ 
-    params 
-  }: { 
-    params: { 
-      id: string, 
-      bookingId: string 
-    }
-  }) 
+interface PaymentPageProps {
+  params: {
+    id: string;
+    bookingId: string;
+  };
+}
+
+export default async function PaymentPage({ params }: Awaited<PaymentPageProps>) 
 {
   const { id, bookingId } = params;
 

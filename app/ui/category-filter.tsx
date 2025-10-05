@@ -1,7 +1,7 @@
 'use client';
 
+import { Category } from "@prisma/client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Category } from "../lib/definitions";
 
 export default function CategoryFilter({ categories }: { categories: Category[] }) {
   const searchParams = useSearchParams();

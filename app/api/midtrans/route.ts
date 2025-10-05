@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Midtrans from 'midtrans-client';
 
+export const dynamic = 'force-dynamic';
+
 const snap = new Midtrans.Snap({
     isProduction: false,
     serverKey: process.env.MIDTRANS_SERVER_KEY!,

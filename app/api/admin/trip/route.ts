@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const trips = await prisma.trip.findMany({

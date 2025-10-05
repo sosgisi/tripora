@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { hash } from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(){
     try{
         const providers = await prisma.provider.findMany();

@@ -5,6 +5,8 @@ import { NextAuthOptions } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { JWT } from "next-auth/jwt";
 
+export const dynamic = 'force-dynamic';
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({

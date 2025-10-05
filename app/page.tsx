@@ -23,16 +23,30 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [categories, setCategories] = useState<CategoryWithTrip[]>([]);
 
-  useEffect(() => {
-    const fetchCategories = async() => {
-      // const res = await fetch('/api/admin/category');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/category`);
-      const data = await res.json();
-      setCategories(data);
-    }
+  // useEffect(() => {
+  //   const fetchCategories = async() => {
+  //     const res = await fetch('/api/admin/category');
+  //     const data = await res.json();
+  //     setCategories(data);
+  //   }
     
-    fetchCategories();
-  }, [])
+  //   fetchCategories();
+  // }, [])
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const fetchCategories = async () => {
+        try {
+          const res = await fetch("/api/admin/category");
+          const data = await res.json();
+          setCategories(data);
+        } catch (err) {
+          console.error("Fetch categories failed:", err);
+        }
+      };
+      fetchCategories();
+    }
+  }, []);
 
   const testimonials = [
     {

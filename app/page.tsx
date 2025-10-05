@@ -1,7 +1,7 @@
 'use client'
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar"
@@ -25,7 +25,8 @@ export default function Home() {
 
   useEffect(() => {
     const fetchCategories = async() => {
-      const res = await fetch('/api/admin/category');
+      // const res = await fetch('/api/admin/category');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/admin/category`);
       const data = await res.json();
       setCategories(data);
     }
@@ -92,7 +93,7 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
     }, 5000)
     return () => clearInterval(timer)
-  }, [])
+  }, [heroSlides.length])
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % heroSlides.length)

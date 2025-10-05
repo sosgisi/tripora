@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { fetchBookingPages } from "@/app/lib/data/booking"
 import BookingTable from "@/app/ui/booking/booking-table";
 import Pagination from "@/app/ui/pagination";

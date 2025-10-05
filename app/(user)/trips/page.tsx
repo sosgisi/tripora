@@ -8,24 +8,14 @@ import TripCard from "./trip-card";
 import { fetchAllCategory } from "@/app/lib/data/category";
 import CategoryFilter from "@/app/ui/category-filter";
 
-// interface PageProps {
-//   searchParams?: {
-//     query?: string;
-//     page?: string;
-//     category?: string;
-//   };
-// }
-export interface PageProps{
-  params: {
-    id: string;
-    bookingId: string;
-  };
+interface PageProps {
   searchParams?: {
     query?: string;
     page?: string;
     category?: string;
   };
 }
+
 
 export default async function Page({ searchParams }: PageProps) {
   const query = searchParams?.query || "";

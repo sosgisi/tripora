@@ -23,30 +23,34 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [categories, setCategories] = useState<CategoryWithTrip[]>([]);
 
-  // useEffect(() => {
-  //   const fetchCategories = async() => {
-  //     const res = await fetch('/api/admin/category');
-  //     const data = await res.json();
-  //     setCategories(data);
-  //   }
-    
-  //   fetchCategories();
-  // }, [])
-
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const fetchCategories = async () => {
-        try {
-          const res = await fetch("/api/admin/category");
-          const data = await res.json();
-          setCategories(data);
-        } catch (err) {
-          console.error("Fetch categories failed:", err);
-        }
-      };
-      fetchCategories();
+    const fetchCategories = async() => {
+      try{
+        const res = await fetch('/api/admin/category');
+        const data = await res.json();
+        setCategories(data);
+      }catch(err){
+        console.error("Fetch categories failed:", err);
+      }
     }
-  }, []);
+    
+    fetchCategories();
+  }, [])
+
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const fetchCategories = async () => {
+  //       try {
+  //         const res = await fetch("/api/admin/category");
+  //         const data = await res.json();
+  //         setCategories(data);
+  //       } catch (err) {
+  //         console.error("Fetch categories failed:", err);
+  //       }
+  //     };
+  //     fetchCategories();
+  //   }
+  // }, []);
 
   const testimonials = [
     {
